@@ -1,0 +1,13 @@
+# Only copying exe in, so minimal container
+FROM scratch
+
+# Default to port 80
+ENV PORT 80
+
+# Add binary
+ADD bin/vega5b-website /vega5b-website
+
+# Add static assets
+ADD web /web
+
+CMD ["/vega5b-website"]
