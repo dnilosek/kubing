@@ -1,0 +1,15 @@
+version: '3'
+# Define redis and app services
+services:
+  # Redis definition
+  redis-server:
+    image: 'redis'
+
+  # App definition
+  visitor-count:
+    build:
+      # Build intended to be run from root
+      context: '../../'
+      dockerfile: 'build/docker/dockerfile'  
+    ports:
+      - "4001:80"

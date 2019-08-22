@@ -54,6 +54,7 @@ func (server *Server) Render(w io.Writer, name string, data interface{}, c echo.
 
 // Start serving
 func (server *Server) Start() error {
+	resetVisitorCount(server)
 	return server.router.Start(fmt.Sprintf(":%d", server.Port))
 }
 
@@ -72,7 +73,6 @@ func (server *Server) Index(context echo.Context) error {
 }
 
 func (server *Server) ResetCount(context echo.Context) error {
-	err := resetVisitorCount(server)
 	if err != nil {
 		return err
 	}

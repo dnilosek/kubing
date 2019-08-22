@@ -44,4 +44,7 @@ clean:
 image:  build
 	docker build -t visitor-count-$(DOCKER_TAG) -f build/docker/dockerfile .
 
+compose: build
+	docker-compose -f build/docker/docker-compose.yml up --build
+
 .PHONY: dep test vet cover run build clean image

@@ -4,6 +4,9 @@ FROM scratch
 # Default to port 80
 ENV PORT 80
 
+# This is the URL of the redis client
+ENV DB_URL "redis://redis-server"
+
 # Add binary
 ADD bin/visitor-count /visitor-count
 
