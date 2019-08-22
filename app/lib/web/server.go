@@ -7,7 +7,10 @@ import (
 	"io"
 	"net/http"
 	"path"
+	"strconv"
 
+	"github.com/dnilosek/kubing/app/lib/database"
+	"github.com/go-redis/redis"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -16,19 +19,22 @@ type Server struct {
 	*Config
 	router    *echo.Echo
 	templates *template.Template
+	database  *database.DB
 }
 
-func NewServer(cfg *Config) *Server {
+func NewServer(cfg *Config, db *database.DB) *Server {
 
 	// Create new server
 	server := &Server{
 		Config:    cfg,
 		router:    echo.New(),
 		templates: loadTemplates(cfg.WebDir),
+		database:  db,
 	}
 
 	// Create endpoints
 	server.router.GET("/", server.Index)
+	server.router.GET("/reset", server.ResetCount)
 
 	// Clear startup info printing
 	server.router.HideBanner = true
@@ -58,10 +64,44 @@ func (server *Server) Stop(ctx context.Context) error {
 
 // Serve the index page
 func (server *Server) Index(context echo.Context) error {
-	return context.Render(http.StatusOK, "index.gohtml", nil)
+	count, err := incrementVisitorCount(server)
+	if err != nil {
+		return err
+	}
+	return context.Render(http.StatusOK, "index.gohtml", count)
+}
+
+func (server *Server) ResetCount(context echo.Context) error {
+	err := resetVisitorCount(server)
+	if err != nil {
+		return err
+	}
+	return context.Redirect(http.StatusSeeOther, "/")
 }
 
 // Helper function to load templates from webdir
 func loadTemplates(webDir string) *template.Template {
 	return template.Must(template.ParseGlob(path.Join(webDir, "templates", "*.gohtml")))
+}
+
+// Helper function to increment visitor count
+func incrementVisitorCount(server *Server) (int, error) {
+	countStr, err := server.database.Get("visitor-count")
+	if err != nil && err != redis.Nil {
+		return 0, err
+	}
+	count := 0
+	if countStr != "" {
+		count, err = strconv.Atoi(countStr)
+		if err != nil {
+			return 0, err
+		}
+	}
+	count += 1
+	err = server.database.Set("visitor-count", strconv.Itoa(count))
+	return count, err
+}
+
+func resetVisitorCount(server *Server) error {
+	return server.database.Set("visitor-count", "0")
 }

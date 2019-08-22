@@ -8,10 +8,11 @@ import (
 )
 
 const (
-	envArg     = "env"
-	portArg    = "port"
-	apiPathArg = "api-path"
-	webDirArg  = "web-dir"
+	envArg         = "env"
+	portArg        = "port"
+	apiPathArg     = "api-path"
+	webDirArg      = "web-dir"
+	databaseUrlArg = "db-url"
 )
 
 // Define operations that CLI impliments
@@ -28,7 +29,7 @@ func Cli(methods *CliMethods) *cli.App {
 	app.Name = "visitor-counter"
 	app.HelpName = "visitor-counter"
 	app.Usage = "Run the visitor counter website server"
-	app.UsageText = "visitor-counter -e ENV -p PORT --api-path API_PATH --web-dir WEB_DIR"
+	app.UsageText = "visitor-counter -e ENV -p PORT --api-path API_PATH --web-dir WEB_DIR --db-url DB_URL"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   strings.Join([]string{envArg, "e"}, ","),
@@ -54,6 +55,12 @@ func Cli(methods *CliMethods) *cli.App {
 			Usage:  "path to local web assets (templates)",
 			EnvVar: "WEB_DIR",
 		},
+		cli.StringFlag{
+			Name:   databaseUrlArg,
+			Value:  defaultDBURL,
+			Usage:  "Connection URL to redis server",
+			EnvVar: "DB_URL",
+		},
 	}
 
 	// Create the action for the app
@@ -64,6 +71,7 @@ func Cli(methods *CliMethods) *cli.App {
 		log.Printf("ENV:	%s", cfg.Env)
 		log.Printf("API PATH: 	%s", cfg.APIPath)
 		log.Printf("WEB PATH:	%s", cfg.WebDir)
+		log.Printf("DB URL:	%s", cfg.DBURL)
 
 		return methods.RunServer(cfg)
 	}
@@ -75,6 +83,6 @@ func getConfig(c *cli.Context) *Config {
 	port := c.Int(portArg)
 	apiPath := c.String(apiPathArg)
 	webDir := c.String(webDirArg)
-
-	return NewConfig(env, port, apiPath, webDir)
+	dbURL := c.String(databaseUrlArg)
+	return NewConfig(env, port, apiPath, webDir, dbURL)
 }

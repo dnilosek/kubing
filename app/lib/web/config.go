@@ -6,6 +6,7 @@ var (
 	defaultPort    = 8080
 	defaultAPIPath = "/"
 	defaultWebDir  = "./web"
+	defaultDBURL   = "redis://localhost:6379"
 )
 
 // Config type
@@ -14,15 +15,17 @@ type Config struct {
 	Port    int
 	APIPath string
 	WebDir  string
+	DBURL   string
 }
 
 // Create config
-func NewConfig(env string, port int, apiPath, webDir string) *Config {
+func NewConfig(env string, port int, apiPath, webDir, dbURL string) *Config {
 	return &Config{
 		Env:     env,
 		Port:    port,
 		APIPath: apiPath,
 		WebDir:  webDir,
+		DBURL:   dbURL,
 	}
 }
 
@@ -32,5 +35,6 @@ func DefaultConfig() *Config {
 		defaultEnv,
 		defaultPort,
 		defaultAPIPath,
-		defaultWebDir)
+		defaultWebDir,
+		defaultDBURL)
 }

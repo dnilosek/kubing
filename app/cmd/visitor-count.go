@@ -9,7 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/dnilosek/kubing/code/app/lib/web"
+	"github.com/dnilosek/kubing/app/lib/database"
+	"github.com/dnilosek/kubing/app/lib/web"
 )
 
 func main() {
@@ -26,7 +27,12 @@ func main() {
 }
 
 func runServer(cfg *web.Config) error {
-	server := web.NewServer(cfg)
+
+	db, err := database.Open(cfg.DBURL)
+	if err != nil {
+		return err
+	}
+	server := web.NewServer(cfg, db)
 
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
@@ -35,7 +41,7 @@ func runServer(cfg *web.Config) error {
 		handleInterrupt(server)
 	}()
 
-	err := server.Start()
+	err = server.Start()
 	if err != nil {
 		return err
 	}

@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/dnilosek/kubing/app/lib/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -20,7 +21,8 @@ func TestStartAndStop(t *testing.T) {
 	cfg.Port = 9999
 	cfg.WebDir = "../../web"
 
-	server := NewServer(cfg)
+	db := test.MockDB()
+	server := NewServer(cfg, db)
 
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
@@ -49,7 +51,8 @@ func TestIndex(t *testing.T) {
 	cfg.Port = 9999
 	cfg.WebDir = "../../web"
 
-	server := NewServer(cfg)
+	db := test.MockDB()
+	server := NewServer(cfg, db)
 
 	server.router.ServeHTTP(rec, req)
 	assert.Equal(t, http.StatusOK, rec.Code)
