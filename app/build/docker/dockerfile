@@ -5,9 +5,9 @@ FROM scratch
 ENV PORT 80
 
 # Add binary
-ADD bin/vega5b-website /vega5b-website
+ADD bin/visitor-count /visitor-count
 
 # Add static assets
 ADD web /web
 
-CMD ["/vega5b-website"]
+CMD ["/visitor-count"]
