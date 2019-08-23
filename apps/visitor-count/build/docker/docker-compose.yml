@@ -3,10 +3,11 @@ version: '3'
 services:
   # Redis definition
   redis-server:
-    image: 'redis'
+    image: 'redis:latest'
 
   # App definition
   visitor-count:
+    restart: on-failure
     build:
       # Build intended to be run from root
       context: '../../'

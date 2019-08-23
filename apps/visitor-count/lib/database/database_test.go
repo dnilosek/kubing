@@ -3,8 +3,8 @@ package database_test
 import (
 	"testing"
 
-	"github.com/dnilosek/kubing/app/lib/database"
-	"github.com/dnilosek/kubing/app/lib/test"
+	"github.com/dnilosek/kubing/apps/visitor-count/lib/database"
+	"github.com/dnilosek/kubing/apps/visitor-count/lib/test"
 
 	"github.com/alicebob/miniredis"
 	"github.com/stretchr/testify/assert"
@@ -34,13 +34,17 @@ func TestOpen(t *testing.T) {
 }
 
 func TestClose(t *testing.T) {
-	db := test.MockDB()
+	db := database.DB{
+		Client: test.MockRedis(),
+	}
 	err := db.Close()
 	assert.Nil(t, err)
 }
 
 func TestSetGet(t *testing.T) {
-	db := test.MockDB()
+	db := database.DB{
+		Client: test.MockRedis(),
+	}
 
 	err := db.Set("foo", "bar")
 	assert.Nil(t, err)

@@ -3,7 +3,7 @@ package web_test
 import (
 	"testing"
 
-	. "github.com/dnilosek/kubing/app/lib/web"
+	. "github.com/dnilosek/kubing/apps/visitor-count/lib/web"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

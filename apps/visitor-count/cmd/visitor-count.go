@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/dnilosek/kubing/app/lib/database"
-	"github.com/dnilosek/kubing/app/lib/web"
+	"github.com/dnilosek/kubing/apps/visitor-count/lib/database"
+	"github.com/dnilosek/kubing/apps/visitor-count/lib/web"
 )
 
 func main() {

@@ -45,6 +45,9 @@ image:  build
 	docker build -t visitor-count-$(DOCKER_TAG) -f build/docker/dockerfile .
 
 compose: build
-	docker-compose -f build/docker/docker-compose.yml up --build
+	docker-compose -f build/docker/docker-compose.yml up --build -d
+
+compose-down: build
+	docker-compose -f build/docker/docker-compose.yml down
 
 .PHONY: dep test vet cover run build clean image

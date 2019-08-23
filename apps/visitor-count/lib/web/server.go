@@ -9,7 +9,7 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/dnilosek/kubing/app/lib/database"
+	"github.com/dnilosek/kubing/apps/visitor-count/lib/database"
 	"github.com/go-redis/redis"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -73,6 +73,7 @@ func (server *Server) Index(context echo.Context) error {
 }
 
 func (server *Server) ResetCount(context echo.Context) error {
+	err := resetVisitorCount(server)
 	if err != nil {
 		return err
 	}
