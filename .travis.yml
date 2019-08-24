@@ -5,6 +5,7 @@ services:
 
 # Steps to do before test
 before_install:
+  - cd apps/react-app/
   - docker build -t react-app-test -f Dockerfile.dev .
 
 # Commands required for test
