@@ -1,0 +1,12 @@
+# Need docker
+sudo: required
+services:
+  - docker
+
+# Steps to do before test
+before_install:
+  - docker build -t react-app-test -f Dockerfile.dev .
+
+# Commands required for test
+script:
+  - docker run react-app-test npm run test -- --coverage
