@@ -10,4 +10,20 @@ before_install:
 
 # Commands required for test
 script:
-  - docker run react-app-test npm run test -- --coverage
+  - docker run -e CI=true react-app-test npm run test
+
+# Commands to deploy
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "react-app"
+  env: "ReactApp-env"
+  bucket_name: "elasticbeanstalk-us-east-2-381217795047"
+  bucket_path: "react-app"
+  on:
+    branch: master
+  access_key_id:
+    secure: "$AWS_ACCESS_KEY"
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY" 
+
