@@ -7,7 +7,9 @@ import (
 )
 
 const (
-	databaseUrlArg = "db-url"
+	databaseUrlArg   = "db-url"
+	outputChannelArg = "out-chan"
+	inputChannelArg  = "in-chan"
 )
 
 // Define operations for CLI
@@ -24,13 +26,25 @@ func Cli(methods *CliMethods) *cli.App {
 	app.Name = "fib-worker"
 	app.HelpName = "fib-worker"
 	app.Usage = "Listen to a redis DB for values to compute fibonacci number on"
-	app.UsageText = "fib-worker --db-url DB_URL"
+	app.UsageText = "fib-worker --db-url DB_URL --in-chan MSG_CHANNEL --out-chan VAL_CHANNEL"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   databaseUrlArg,
 			Value:  defaultDBURL,
 			Usage:  "Connection URL to redis server",
 			EnvVar: "DB_URL",
+		},
+		cli.StringFlag{
+			Name:   inputChannelArg,
+			Value:  defaultInputChannel,
+			Usage:  "Input channel to listen on for messages",
+			EnvVar: "MSG_CHANNEL",
+		},
+		cli.StringFlag{
+			Name:   outputChannelArg,
+			Value:  defaultOutputChannel,
+			Usage:  "Output channel to put pass values back on",
+			EnvVar: "VAL_CHANNEL",
 		},
 	}
 
@@ -39,7 +53,9 @@ func Cli(methods *CliMethods) *cli.App {
 
 		// Startup logging
 		cfg := getConfig(c)
-		log.Printf("DB URL:	%s", cfg.DBURL)
+		log.Printf("DB URL:		%s", cfg.DBURL)
+		log.Printf("MSG CHANNEL:	%s", cfg.InputChannel)
+		log.Printf("VAL CHANNEL:	%s", cfg.OutputChannel)
 
 		return methods.RunWorker(cfg)
 	}
@@ -49,5 +65,7 @@ func Cli(methods *CliMethods) *cli.App {
 // Function go create our config
 func getConfig(c *cli.Context) *Config {
 	dbURL := c.String(databaseUrlArg)
-	return NewConfig(dbURL)
+	inChan := c.String(inputChannelArg)
+	outChan := c.String(outputChannelArg)
+	return NewConfig(dbURL, inChan, outChan)
 }

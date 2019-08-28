@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"strconv"
 
+	"github.com/dnilosek/kubing/apps/fib-overkill/lib/database"
 	"github.com/dnilosek/kubing/apps/fib-overkill/worker/lib/web"
 	"github.com/dnilosek/kubing/apps/fib-overkill/worker/lib/work"
-	"github.com/dnilosek/kubing/apps/visitor-count/lib/database"
 )
 
 func main() {
@@ -24,15 +24,24 @@ func main() {
 }
 
 func runWorker(cfg *web.Config) error {
-	db, err := database.Open(cfg.DBURL)
+	db, err := database.OpenRedis(cfg.DBURL)
 	if err != nil {
 		return err
 	}
 	listener := work.NewListener(db)
 
-	msgChan := listener.Listen("test")
+	msgChan := listener.Listen(cfg.InputChannel)
 	for msg := range msgChan {
-		fmt.Println(msg)
+		i, err := strconv.Atoi(msg)
+		if err != nil {
+			log.Println("Cannot convert message to int:", err)
+		}
+		outVal := work.FibonacciNumberAtIndex(i)
+		log.Printf("Recieved message %v , computed value %v\n", i, outVal)
+		err = db.HSet(cfg.OutputChannel, msg, strconv.Itoa(outVal))
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

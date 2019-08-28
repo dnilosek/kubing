@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/dnilosek/kubing/apps/fib-overkill/lib/database"
+	"github.com/dnilosek/kubing/apps/fib-overkill/lib/test"
 	. "github.com/dnilosek/kubing/apps/fib-overkill/worker/lib/web"
-	"github.com/dnilosek/kubing/apps/visitor-count/lib/database"
-	"github.com/dnilosek/kubing/apps/visitor-count/lib/test"
 	"github.com/stretchr/testify/assert"
 )
 

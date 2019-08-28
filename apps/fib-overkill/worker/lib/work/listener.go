@@ -3,15 +3,15 @@ package work
 import (
 	"log"
 
-	"github.com/dnilosek/kubing/apps/visitor-count/lib/database"
+	"github.com/dnilosek/kubing/apps/fib-overkill/lib/database"
 	"github.com/go-redis/redis"
 )
 
 type Listener struct {
-	database *database.DB
+	database *database.RedisDB
 }
 
-func NewListener(db *database.DB) *Listener {
+func NewListener(db *database.RedisDB) *Listener {
 	// Create the Listener
 	return &Listener{
 		database: db,
