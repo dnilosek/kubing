@@ -9,7 +9,8 @@ require (
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/lib/pq v1.2.0
-	github.com/stretchr/testify v1.4.0
+	github.com/onsi/ginkgo v1.16.5 // indirect
+	github.com/onsi/gomega v1.27.1 // indirect
+	github.com/stretchr/testify v1.5.1
 	github.com/urfave/cli v1.21.0
-	golang.org/x/crypto v0.0.0-20190820162420-60c769a6c586 // indirect
 )
